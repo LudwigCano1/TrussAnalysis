@@ -10,7 +10,7 @@ with st.sidebar:
     st.write("**This app analyzes truss structures using the stiffness method.**")
     st.write("Temperature changes are not considered.")
     st.write("Fabrication error of elements are not considered.")
-    st.markdown("[aea](https://www.google.com)")
+    #st.markdown("[aea](https://www.google.com)")
 
 with Tab1:
     c1,c2,c3 = st.columns(3,gap="large")
@@ -44,8 +44,8 @@ with Tab1:
         with c3:
             coord_y = st.number_input(labY,label_visibility="collapsed")
         dict_Nudos[label]=[coord_x,coord_y,GdL,GdL+1]
-        plot1.update_layout(title_text="Joints")
-        plot1.add_scatter(x=[coord_x],y=[coord_y],mode="markers",marker={"color":"#FF0101","size":15},name=label)
+        plot1.update_layout(showlegend=False)
+        plot1.add_scatter(x=[coord_x],y=[coord_y],mode="markers+text",marker={"color":"#FF0101","size":15},name=label,text=label,textposition="bottom center")
         GdL +=2
         #st.write("---")
         labX += " "
@@ -59,6 +59,7 @@ with Tab1:
 
 with Tab2:
     c1,c2 = st.columns([1,1])
+    Nudos_Usados = {}
     with c1: st.write("Number of elements:")
     with c2: nElements = st.number_input("nElements",1,100,1,1,label_visibility="collapsed")
     st.write("---")
@@ -88,11 +89,17 @@ with Tab2:
         with c5:
             Elast = st.number_input(lab_E,value=1.0,label_visibility="collapsed")
         Elements.append([label,Joint_i,Joint_f,Area,Elast])
+        Nudos_Usados[Joint_i] = dict_Nudos[Joint_i]
+        Nudos_Usados[Joint_f] = dict_Nudos[Joint_f]
         plot1.add_scatter(x=[dict_Nudos[Joint_i][0],dict_Nudos[Joint_f][0]],y=[dict_Nudos[Joint_i][1],dict_Nudos[Joint_f][1]],mode="lines",line={"color":"#01FE40","width":4},name=label)
+        plot1.add_scatter(x=[0.5*(dict_Nudos[Joint_i][0]+dict_Nudos[Joint_f][0])],y=[0.5*(dict_Nudos[Joint_i][1]+dict_Nudos[Joint_f][1])],mode="lines+text",line={"color":"#01FE40","width":4},name=label,text=label,textposition="bottom center")
         lab_i += " "
         lab_f += " "
         lab_A += " "
         lab_E += " "
+    for i in Nudos_Usados:
+        plot1.add_scatter(x=[Nudos_Usados[i][0]],y=[Nudos_Usados[i][1]],mode="markers",marker={"color":"#FF0101","size":15},name=i)
     st.write("---")
     #Elements
+    #Nudos_Usados
     st.plotly_chart(plot1,use_container_width=True)
