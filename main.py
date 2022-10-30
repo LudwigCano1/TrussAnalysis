@@ -1,8 +1,9 @@
 from pydoc import visiblename
 import streamlit as st
 import plotly_express as px
-from functions import Assemble_K_general,Fix,load
+from functions import Assemble_K_element, Assemble_K_general,Fix,load
 from numpy.linalg import solve,det
+from numpy import array,zeros
 
 st.set_page_config(page_title="Truss Analysis",page_icon=":shark:")
 
@@ -187,5 +188,29 @@ with Tab5:
         else:
             st.write("The constraints are not enough for equilibrium")
     with pes2:
-        st.write("a")
-        #ver_elem = st.selectbox()
+        ver_elem = st.selectbox("Select Element:",dict_Elem)
+        coord_start = array([Nudos_Usados[dict_Elem[ver_elem][0]][0],Nudos_Usados[dict_Elem[ver_elem][0]][1]])
+        coord_end = array([Nudos_Usados[dict_Elem[ver_elem][1]][0],Nudos_Usados[dict_Elem[ver_elem][1]][1]])
+        A = dict_Elem[ver_elem][2]
+        E = dict_Elem[ver_elem][3]
+        K_elem = Assemble_K_element(coord_start,coord_end,A,E)
+        u_el = zeros((4,1))
+        u_el[0] = U[Nudos_Usados[dict_Elem[ver_elem][0]][2]]
+        u_el[1] = U[Nudos_Usados[dict_Elem[ver_elem][0]][3]]
+        u_el[2] = U[Nudos_Usados[dict_Elem[ver_elem][1]][2]]
+        u_el[3] = U[Nudos_Usados[dict_Elem[ver_elem][1]][3]]
+        F_el = K_elem@u_el
+        c1,c2,c3 = st.columns([3,2,1])
+        if det(K) != 0:
+            U = solve(K,F)
+            with c1:
+                st.write("Element stiffness matrix")
+                st.write(K_elem)
+            with c2:
+                st.write("Displacements")
+                st.write(u_el)
+            with c3:
+                st.write("Forces")
+                st.write(F_el)
+        else:
+            st.write("The constraints are not enough for equilibrium")
