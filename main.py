@@ -25,7 +25,7 @@ with st.sidebar:
         c1,c2 = st.columns([3,1])
         with c1: st.write("Constraint color:")
         with c2: col_const = st.color_picker("col_c","#1200FF",label_visibility="collapsed")
-    st.write("Developed by: Ludwig Cano")
+    st.write("**Developed by:** Ludwig Cano")
 
 with Tab1:
     c1,c2,c3 = st.columns(3,gap="large")
