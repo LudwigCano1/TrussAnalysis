@@ -37,7 +37,7 @@ with Tab1:
     with c3:
         st.write("Force units:")
         force_unit = st.text_input("FU","kN",label_visibility="collapsed")
-    plot1 = px.line(x=[0],y=[0],labels={"x":f"x ({length_unit})","y":f"y ({length_unit})"})
+    plot1 = px.line(x=[0],y=[0],labels={"x":f"x ({length_unit})","y":f"y ({length_unit})"},height=600)
     st.write("---")
     dict_Nudos = {}
     labX = f"Coord X ({length_unit}):"
@@ -253,7 +253,7 @@ for n in Nudos_Usados:
     Nudos_Desplazados[n][1] = Nudos_Usados[n][1] + U[Nudos_Usados[n][3]][0]*dist_max/disp_max
 
 with pes3:
-    plot_deformed = px.line(x=[0],y=[0],labels={"x":f"x ({length_unit})","y":f"y ({length_unit})"},range_x=[x_min-dist_max*1.5,x_max+dist_max*1.5],range_y=[y_min-dist_max*1.5,y_max+dist_max*1.5])
+    plot_deformed = px.line(x=[0],y=[0],labels={"x":f"x ({length_unit})","y":f"y ({length_unit})"},range_x=[x_min-dist_max*1.5,x_max+dist_max*1.5],range_y=[y_min-dist_max*1.5,y_max+dist_max*1.5],height=600)
     plot_deformed.update_layout(showlegend=False)
     for el in dict_Elem:
         Joint_i = dict_Elem[el][0]
